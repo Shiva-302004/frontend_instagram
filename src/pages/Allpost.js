@@ -7,13 +7,17 @@ import { IoMdHeart } from "react-icons/io";
 import { toast } from 'react-toastify';
 const Allpost = () => {
   const [post, setpost] = useState([])
+  const [loading,setloading]=useState(false)
   useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER}/api/v1/photos/allposts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
       }
-    }).then(res => res.json()).then((data) => setpost(data.data))
+    }).then(res => res.json()).then((data) =>{ 
+      setloading(true)
+      setpost(data.data)})
+      setloading(false)
     // console.log(post)
   }, [])
 
@@ -71,7 +75,11 @@ const Allpost = () => {
   return (
     <div className='flex flex-col pt-10 justify-center items-center'>
       <div className="pt-10 text-center">
+      {
 
+        !loading?
+        <span className='text-white text-4xl'>Loading.....</span>
+        :
         <>
           {
             post?.length === 0 ?
@@ -119,6 +127,7 @@ const Allpost = () => {
               </div>
           }
         </>
+      }
 
 
       </div>

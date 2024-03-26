@@ -13,12 +13,15 @@ const Comments = () => {
     const [likes, setlikes] = useState([])
     const [title, settitle] = useState("")
     const [idd, setid] = useState("")
+    const [loading, setloading] = useState(false)
     const [uploadcomment, setuploadcomment] = useState({
         title: ""
     })
     useEffect(() => {
+        setloading(true)
         fetch(`${process.env.REACT_APP_SERVER}/api/v1/photos/comment/${id}`).then(res => res.json())
             .then((data) => {
+
                 console.log(data)
                 setcomments(data.data.comments)
                 setname(data.data.name)
@@ -26,6 +29,7 @@ const Comments = () => {
                 setlikes(data.data.likes)
                 settitle(data.data.title)
                 setid("")
+                setloading(false)
             })
         // console.log(comments)
     }, [])
@@ -126,16 +130,23 @@ const Comments = () => {
             <div className='w-[80vw] h-[420px] md:w-[370px] md:h-[630px] lg:w-[500px]   lg:h-[820px]  bg-white flex flex-col ml-3 md:ml-0 md:mt-3 rounded-md'>
                 <div className='w-[80vw] h-[320px] md:w-[370px] md:h-[530px] lg:w-[500px]   lg:h-[720px] overflow-scroll'>
                     {
-                        comments.length === 0 &&
-                        <span className='text-black text-center'> no comments yet</span>
-                    }
-                    {
-                        comments?.map((item, id) => {
-                            return <div key={id} className='flex m-2'>
-                                <span className='text-[grey] font-bold'>{item.userid}</span>
-                                <span className='font-thin ml-3'>{item.title}</span>
-                            </div>
-                        })
+                        loading ?
+                            <span>Loading Comments on this posts</span>
+                            :
+                            <>
+                                {
+                                    comments.length === 0 &&
+                                    <span className='text-black text-center'> no comments yet</span>
+                                }
+                                {
+                                    comments?.map((item, id) => {
+                                        return <div key={id} className='flex m-2'>
+                                            <span className='text-[grey] font-bold'>{item.userid}</span>
+                                            <span className='font-thin ml-3'>{item.title}</span>
+                                        </div>
+                                    })
+                                }
+                            </>
                     }
                 </div>
 
